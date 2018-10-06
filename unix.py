@@ -1,5 +1,9 @@
 import socket
 import json
+import os 
+import time
+
+
 class ExchangeRates(object):
 	"""d
 	ocstring for ClassName"""
@@ -34,7 +38,14 @@ class ExchangeRates(object):
 		parse_file = json.loads(data)
 		rate = parse_file["rates"][currency]
 		#read modification time of the file.
+		t = time.ctime(os.path.getmtime("data.json"))
 		return rate;
+
+	def currency_list():
+
+		currency_file = open("currency_list.json","r").read()
+		parse = json.loads(file)
+		print(currency_file)
 
 	def fetch_data(self):
 
