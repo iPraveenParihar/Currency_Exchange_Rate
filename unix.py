@@ -5,8 +5,8 @@ import time
 
 
 class ExchangeRates(object):
-	"""d
-	ocstring for ClassName"""
+	"""docstring for ClassName"""
+	Internet_status = 1
 	def __init__(self, arg):
 		super(ClassName, self).__init__()
 		self.arg = arg
@@ -18,6 +18,7 @@ class ExchangeRates(object):
 			host = socket.gethostbyname(REMOTE_SERVER)
 			s = socket.create_connection((host,80),2)
 
+			Internet_status = 0
 			return True
 		except:
 			pass
@@ -52,8 +53,34 @@ class ExchangeRates(object):
 		#check Internet
 		#if true fetch data and write to file 
 		#if false read from  file and 
-		base_api_url = "https://openexchange"
+		base_api_url = "https://openexchangerates.org/api/"
+		app_id = "cfb18f556bb142dd97081f0779265ce1"
+		url = base_api_url+"latest.json?app_id="+app_id
 
+		data_file = "data.json"
+		if(self.Internet_Available()):
+
+			get = requests.get(url)
+			data = get.text
+			#display()
+
+			self.write_file(data,data_file)
+
+		else:
+			#readfile.
+
+
+	def display(self):
+		pass 
+
+	def input():
+		pass
+
+	def description():
+		pass
+
+	def warning():
+		
 
 		
 
