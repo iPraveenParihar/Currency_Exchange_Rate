@@ -1,10 +1,14 @@
-import socket
-import json
-import os 
-import time
-import requests
 import sys
-import datetime
+try:
+	import json
+	import os 
+	import time
+	import requests
+	import datetime
+	import socket
+except Exception as e:
+	print(e)
+
 
 SERVER = "www.google.com"
 Internet_Status = 0
@@ -22,8 +26,8 @@ class ExchangeRates():
 			s = socket.create_connection((host,80),2)
 
 			return True
-		except:
-			pass
+		except Exception as e:
+			print(e)
 		return False
 
 
@@ -34,13 +38,17 @@ class ExchangeRates():
 
 	def read_file(self,currency,file_name):
 
-		result_file = open(file_name,"r")
-		data = result_file.read()
-		parse_file = json.loads(data)
-		rate = parse_file["rates"][currency]
-
-		#read modification time of the file.
-		t = time.ctime(os.path.getmtime("data.json"))
+		try:
+			result_file = open(file_name,"r")
+			data = result_file.read()
+			parse_file = json.loads(data)
+			rate = parse_file["rates"][currency]
+			#read modification time of the file.
+			t = time.ctime(os.path.getmtime("data.json"))
+		except IOError:
+			print(e)
+		except ValueError:
+			print(e)
 	
 		return rate,t
 
@@ -73,58 +81,71 @@ class ExchangeRates():
 		app_id = "cfb18f556bb142dd97081f0779265ce1"
 		url = base_api_url+"latest.json?app_id="+app_id
 		data_file = "data.json"
+		try:
+			test = open(data_file,"r")
+			test1 = open("currency_list.json","r")
+		except FileNotFoundError as e:
+			print(e)
+			sys.exit()
 
-		if(self.Internet_Available(SERVER)):
-			Internet_Status = 1
-		else:
-			Internet_Status = 0
+		try:
 
-		self.description()
+			if(self.Internet_Available(SERVER)):
+				Internet_Status = 1
+			else:
+				Internet_Status = 0
 
-		if(Internet_Status):
+			self.description()
 
-			get = requests.get(url)
-			data = get.text
+			if(Internet_Status == 1	):
+
+				get = requests.get(url)
+				data = get.text
 			
-			self.write_file(data,data_file)
+				self.write_file(data,data_file)
 
-			parse_file = json.loads(data)
+				parse_file = json.loads(data)
 
-			while(1):
-				currency_input = self.Input()
+				while(1):
+					currency_input = self.Input()
 
-				if(currency_input == 'Q'):
-					os.system("clear")
-					sys.exit()
-				elif(currency_input == 'C'):
-					self.currency_list()
-				else:
-					if(self.check_currency(currency_input)):
-						exchange_rate = parse_file["rates"][currency_input]
-						print(("1 USD = %.3f %s")% (exchange_rate,currency_input))
-						if(currency_input == 'USD'):
-							continue
-						print(("1 %s = %.3f USD")% ( currency_input, 1/exchange_rate))
+					if(currency_input == 'Q'):
+						os.system("clear")
+						sys.exit()
+					elif(currency_input == 'C'):
+						self.currency_list()
+					else:
+						if(self.check_currency(currency_input)):
+							exchange_rate = parse_file["rates"][currency_input]
+							print(("1 USD = %.3f %s")% (exchange_rate,currency_input))
+							if(currency_input == 'USD'):
+								continue
+							print(("1 %s = %.3f USD")% ( currency_input, 1/exchange_rate))
 
-		else:
-			while(1):
-				currency_input = self.Input()
+			else:
+				while(1):
+					currency_input = self.Input()
 
-				if(currency_input == 'Q'):
-					os.system("clear")
-					sys.exit()
-				elif(currency_input == 'C'):
-					self.currency_list()
+					if(currency_input == 'Q'):
+						os.system("clear")
+						sys.exit()
+					elif(currency_input == 'C'):
+						self.currency_list()
 
-				else:
-					if(self.check_currency(currency_input)):
-						exchange_rate , time = self.read_file(currency_input,data_file)
-						print(("1 USD = %.3f %s")% (exchange_rate,currency_input))
-						if(currency_input == 'USD'):
-							continue
-						print(("1 %s = %.3f USD")% ( currency_input, 1/exchange_rate))
+					else:
+						if(self.check_currency(currency_input)):
+							exchange_rate , time = self.read_file(currency_input,data_file)
+							print(("1 USD = %.3f %s")% (exchange_rate,currency_input))
+							if(currency_input == 'USD'):
+								continue
+							print(("1 %s = %.3f USD")% ( currency_input, 1/exchange_rate))
 
-
+		except NameError as e:
+			print(e)
+		except AttributeError as e:
+			print(e)
+		
+		sys.exit()
 
 	def Input(self):
 		currency_input = input("You have:")
