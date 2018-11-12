@@ -38,18 +38,13 @@ class ExchangeRates():
 
 	def read_file(self,currency,file_name):
 
-		try:
-			result_file = open(file_name,"r")
-			data = result_file.read()
-			parse_file = json.loads(data)
-			rate = parse_file["rates"][currency]
-			#read modification time of the file.
-			t = time.ctime(os.path.getmtime("data.json"))
-		except IOError:
-			print(e)
-		except ValueError:
-			print(e)
-	
+		result_file = open(file_name,"r")
+		data = result_file.read()
+		parse_file = json.loads(data)
+		rate = parse_file["rates"][currency]
+		#read modification time of the file.
+		t = time.ctime(os.path.getmtime("data.json"))
+		
 		return rate,t
 
 	def currency_list(self):
@@ -68,6 +63,15 @@ class ExchangeRates():
 				return 1
 
 		return 0
+
+	def ErrorStatus(self,error_file):
+		
+		error_status = error_file["status"]
+		msg = error_file["message"]
+		desp = error_file["description"]
+
+		print(msg"\n"desp)
+
 
 	def fetch_data(self):
 
@@ -101,10 +105,15 @@ class ExchangeRates():
 
 				get = requests.get(url)
 				data = get.text
-			
-				self.write_file(data,data_file)
-
 				parse_file = json.loads(data)
+
+				for key in parse_file.keys():
+					if key == "error":
+						self.ErrorStatus(parse_file)
+						sys.exit()
+
+				self.write_file(data,data_file)
+				
 
 				while(1):
 					currency_input = self.Input()
@@ -144,7 +153,12 @@ class ExchangeRates():
 			print(e)
 		except AttributeError as e:
 			print(e)
-		
+		except KeyError as e:
+			print(e)
+		except ValueError as e:
+			print(e)
+		except IOError as e:
+			print(e)
 		sys.exit()
 
 	def Input(self):
@@ -171,5 +185,8 @@ Exchange Rates results are produced with base currency as USD."""
 #class object 
 object = ExchangeRates()
 object.fetch_data()
+
+		
+
 
 		
