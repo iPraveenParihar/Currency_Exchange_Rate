@@ -1,4 +1,6 @@
 import sys
+
+#Required python libraries 
 try:
 	import json
 	import os 
@@ -24,10 +26,11 @@ class ExchangeRates():
 		try:
 			host = socket.gethostbyname(hostname)
 			s = socket.create_connection((host,80),2)
-
 			return True
+
 		except Exception as e:
 			print(e)
+
 		return False
 
 
@@ -70,7 +73,8 @@ class ExchangeRates():
 		msg = error_file["message"]
 		desp = error_file["description"]
 
-		print(msg"\n"desp)
+		print(msg)
+		print(desp)
 
 
 	def fetch_data(self):
@@ -85,6 +89,8 @@ class ExchangeRates():
 		app_id = "cfb18f556bb142dd97081f0779265ce1"
 		url = base_api_url+"latest.json?app_id="+app_id
 		data_file = "data.json"
+		
+		#Check for required files..
 		try:
 			test = open(data_file,"r")
 			test1 = open("currency_list.json","r")
@@ -99,8 +105,6 @@ class ExchangeRates():
 			else:
 				Internet_Status = 0
 
-			self.description()
-
 			if(Internet_Status == 1	):
 
 				get = requests.get(url)
@@ -112,42 +116,31 @@ class ExchangeRates():
 						self.ErrorStatus(parse_file)
 						sys.exit()
 
+				self.description(1)
 				self.write_file(data,data_file)
 				
 
 				while(1):
 					currency_input = self.Input()
 
-					if(currency_input == 'Q'):
-						os.system("clear")
-						sys.exit()
-					elif(currency_input == 'C'):
-						self.currency_list()
-					else:
-						if(self.check_currency(currency_input)):
-							exchange_rate = parse_file["rates"][currency_input]
-							print(("1 USD = %.3f %s")% (exchange_rate,currency_input))
-							if(currency_input == 'USD'):
-								continue
-							print(("1 %s = %.3f USD")% ( currency_input, 1/exchange_rate))
+					if(self.check_currency(currency_input)):
+						exchange_rate = parse_file["rates"][currency_input]
+						print(("1 USD = %.3f %s")% (exchange_rate,currency_input))
+						if(currency_input == 'USD'):
+							continue
+						print(("1 %s = %.3f USD")% ( currency_input, 1/exchange_rate))
 
 			else:
+				self.description(0)
 				while(1):
 					currency_input = self.Input()
 
-					if(currency_input == 'Q'):
-						os.system("clear")
-						sys.exit()
-					elif(currency_input == 'C'):
-						self.currency_list()
-
-					else:
-						if(self.check_currency(currency_input)):
-							exchange_rate , time = self.read_file(currency_input,data_file)
-							print(("1 USD = %.3f %s")% (exchange_rate,currency_input))
-							if(currency_input == 'USD'):
-								continue
-							print(("1 %s = %.3f USD")% ( currency_input, 1/exchange_rate))
+					if(self.check_currency(currency_input)):
+						exchange_rate , time = self.read_file(currency_input,data_file)
+						print(("1 USD = %.3f %s")% (exchange_rate,currency_input))
+						if(currency_input == 'USD'):
+							continue
+						print(("1 %s = %.3f USD")% ( currency_input, 1/exchange_rate))
 
 		except NameError as e:
 			print(e)
@@ -162,14 +155,23 @@ class ExchangeRates():
 		sys.exit()
 
 	def Input(self):
-		currency_input = input("You have:")
-		return currency_input.upper()
-
-	def description(self):
+		currency_input = input("You have:").upper()
 		
-		if(Internet_Status):
+		if(currency_input == 'Q'):
+			os.system("clear")
+			sys.exit()
+		elif(currency_input == 'C'):
+			self.currency_list()
+		elif(currency_input == "CLEAR"):
+			os.system("clear")
+		else:
+			return currency_input
+
+	def description(self,status):
+		
+		if(status == 1):
 			time = 	datetime.datetime.now()
-			time.strftime("%d %b %a %I:%M:%S")
+			time = time.strftime("%c")
 		else:
 			rate,time = self.read_file("USD","data.json")
 
@@ -184,9 +186,8 @@ Exchange Rates results are produced with base currency as USD."""
 
 #class object 
 object = ExchangeRates()
+#Invoking main module 
 object.fetch_data()
 
 		
-
-
 		
