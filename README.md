@@ -25,11 +25,11 @@ Upon signup.
 
 
 # Requirement Specification
-•	Python3 Installed
+•	Python3 Installed <br />
 •	Python Libraries(JSON)
 
 
 # Limitations
-•	User gets exchange rates for limited time
-•	Required Active Internet for latest data.
+•	User gets exchange rates for limited time <br />
+•	Required Active Internet for latest data. <br />
 •	It is based on Command Line Interface.
