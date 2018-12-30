@@ -35,4 +35,4 @@ Upon signup.
 
 
 ## Modification
-- User can use his own API key by signing up [OpenExchangeRates])(www.openexchangerates.org) <br /> You get  1000 free API calls. <br />
+- User can use his own API key by signing up [OpenExchangeRates](www.openexchangerates.org) <br /> You get  1000 free API calls. <br />
