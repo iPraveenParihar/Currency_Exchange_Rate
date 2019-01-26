@@ -1,13 +1,6 @@
 # Currency Exchange
 A simple Currency Exchange-Rate Python program for over 150+ world currencies.
 
-## Introduction
-In finance, an exchange rate is the rate at which one currency will be exchanged for another. It is also regarded as the value of one country’s currency in relation to another currency. 
-Objective
-Exchange rates are much important even for a small scale business.
-As exchange rates go up and down, it might be a difficult task for a company to monitor rates so that it will be in their favour.
-A simple Application/Program can be built so that users can monitor exchange rates.
-
 
 ## Scope
 Exchange Rate is a program made to get latest exchange rate of a currency.
