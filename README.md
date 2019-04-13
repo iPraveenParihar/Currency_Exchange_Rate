@@ -5,7 +5,7 @@ A simple Currency Exchange-Rate Python program for over 150+ world currencies.
 ## Scope
 Exchange Rate is a program made to get latest exchange rate of a currency.
 It is a CLI (Command Line Interface) wherein users can get list of all world currencies, exchange rates. So program can be invoked from the terminal and display exchange rates of user choice. Exchange Rates are fetched from website **www.openexchangerates.org** using API service. For fetching latest data user must have an active internet connection this is the basic requirement of the program.
-•	All exchange rates are with respect to USD(US Dollar) <br />
+•	All exchange rates are with respect to USD. <br />
 •	User get a list of 150+ world currencies <br />
 •	For full time access to exchange rates subscription is needed from openexchangerates 
 
