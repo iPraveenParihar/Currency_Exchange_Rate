@@ -12,7 +12,7 @@ except Exception as e:
 	print(e)
 
 
-SERVER = "www.google.com"
+SERVER = "https://openexchangerates.org" #use www.google.com if not working.
 Internet_Status = 0
 
 class ExchangeRates():
