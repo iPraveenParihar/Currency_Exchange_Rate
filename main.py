@@ -1,4 +1,5 @@
 import sys
+import traceback
 
 #Required python libraries 
 try:
@@ -9,11 +10,11 @@ try:
 	import datetime
 	import socket
 except Exception as e:
-	print(e)
+	raise e
 
 
 SERVER = "https://openexchangerates.org" #use www.google.com if not working.
-Internet_Status = 0
+Internet_Status = 1
 
 class ExchangeRates():
 
@@ -61,10 +62,14 @@ class ExchangeRates():
 		currency_file = open("currency_list.json","r").read()
 		parse_file = json.loads(currency_file)
 
-		for currency in parse_file:
-			if(currency == currency_input):
-				return 1
+		# for currency in parse_file:
+		# 	if(currency == currency_input):
+		# 		return 1
 
+		if currency_input in parse_file:
+			return 1
+
+		print("{} is not a valid country currency code!\n".format(currency_input))
 		return 0
 
 	def ErrorStatus(self,error_file):
@@ -86,29 +91,34 @@ class ExchangeRates():
 		os.system("clear")
 
 		base_api_url = "https://openexchangerates.org/api/"
-		app_id = "cfb18f556bb142dd97081f0779265ce1"
+		app_id = "b083ae83e4ac414d956beb348f6d23af"
 		url = base_api_url+"latest.json?app_id="+app_id
 		data_file = "data.json"
 		
 		#Check for required files..
 		try:
-			test = open(data_file,"r")
 			test1 = open("currency_list.json","r")
 		except FileNotFoundError as e:
-			print(e)
-			sys.exit()
+			raise e
+
+		try:
+			test = open(data_file,"r")
+		except FileNotFoundError as e:
+			test = open(data_file, "w")
+			test.close()
 
 		try:
 
-			if(self.Internet_Available(SERVER)):
-				Internet_Status = 1
-			else:
-				Internet_Status = 0
+			# if(self.Internet_Available(SERVER)):
+			# 	Internet_Status = 1
+			# else:
+			# 	Internet_Status = 0
 
 			if(Internet_Status == 1	):
-
+					
 				get = requests.get(url)
 				data = get.text
+				#print(data)
 				parse_file = json.loads(data)
 
 				for key in parse_file.keys():
@@ -122,7 +132,14 @@ class ExchangeRates():
 
 				while(1):
 					currency_input = self.Input()
-
+					
+					if currency_input == "C":
+						self.currency_list()
+						continue
+					if currency_input == "CLEAR":
+						os.system("clear")
+						continue
+					
 					if(self.check_currency(currency_input)):
 						exchange_rate = parse_file["rates"][currency_input]
 						print(("1 USD = %.3f %s")% (exchange_rate,currency_input))
@@ -135,6 +152,14 @@ class ExchangeRates():
 				while(1):
 					currency_input = self.Input()
 
+					if currency_input == "C":
+						self.currency_list()
+						continue
+
+					if currency_input == "CLEAR":
+						os.system("clear")
+						continue
+
 					if(self.check_currency(currency_input)):
 						exchange_rate , time = self.read_file(currency_input,data_file)
 						print(("1 USD = %.3f %s")% (exchange_rate,currency_input))
@@ -142,17 +167,20 @@ class ExchangeRates():
 							continue
 						print(("1 %s = %.3f USD")% ( currency_input, 1/exchange_rate))
 
-		except NameError as e:
-			print(e)
-		except AttributeError as e:
-			print(e)
-		except KeyError as e:
-			print(e)
-		except ValueError as e:
-			print(e)
-		except IOError as e:
-			print(e)
-		sys.exit()
+		except Exception as e:
+			raise e
+		# except NameError as e:
+		# 	raise e
+		# except AttributeError as e:
+		# 	print(e)
+		# except KeyError as e:
+		# 	print(e)
+		# except ValueError as e:
+		# 	print(e)
+		# except IOError as e:
+		# 	print(e)
+		# traceback.print_exc()
+		# sys.exit()
 
 	def Input(self):
 		currency_input = input("You have:").upper()
@@ -160,12 +188,8 @@ class ExchangeRates():
 		if(currency_input == 'Q'):
 			os.system("clear")
 			sys.exit()
-		elif(currency_input == 'C'):
-			self.currency_list()
-		elif(currency_input == "CLEAR"):
-			os.system("clear")
-		else:
-			return currency_input
+
+		return currency_input
 
 	def description(self,status):
 		
@@ -184,10 +208,11 @@ Exchange Rates results are produced with base currency as USD."""
 		print("\n")
 		print("Press 'q' to Exit, Press 'c' for list of currencies")
 
-#class object 
-object = ExchangeRates()
-#Invoking main module 
-object.fetch_data()
-
-		
-		
+try:
+	#class object 
+	object = ExchangeRates()
+	#Invoking main module 
+	object.fetch_data()
+except Exception as e:
+	print(e)
+	traceback.print_exc()
