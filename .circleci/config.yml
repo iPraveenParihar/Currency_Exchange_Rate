@@ -25,10 +25,7 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
-        pkg-manager: pip
-      - run: 
-          name: "Install packages"
-          command: pip install requests socket
+          pkg-manager: pip
       - run:
           name: "Run main.py"
           command: python main.py
