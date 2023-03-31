@@ -18,6 +18,9 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
       - run:
+          name: "Check python"
+          command: "python --version"
+      - run:
           name: "install libraries"
           command: "pip install requests socket"
       - run:
